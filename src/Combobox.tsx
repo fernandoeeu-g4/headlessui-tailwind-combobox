@@ -47,8 +47,25 @@ export function MyCombobox({ options, selected, setSelected }: Props) {
       <Combobox
         value={selected}
         onChange={(options) => {
-          console.log(options);
-          setSelected(options);
+          //PS: Ambas as formas fazem a mesma coisa, porém uma tem maior performance e não utiliza ts-ignore
+
+          // Forma bonita e mais performática
+
+          const unique = options.reduce((prev, next) => {
+            const data = new Map(Object.entries(prev));
+            data.set(next.label, next);
+            return Object.fromEntries(data);
+          }, {});
+
+          // Forma feia e menos performática
+
+          // const unique = options.reduce((prev, next) => {
+          //   // Cria u objeto com a chave única sendo o label e vai adicionando chaves
+          //   //@ts-ignore
+          //   prev[next.label] = next;
+          //   return prev;
+          // }, {});
+          setSelected(Object.values(unique));
         }}
         multiple
       >
